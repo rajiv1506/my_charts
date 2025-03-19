@@ -19,7 +19,7 @@ jobs:
 
       # Set up Helm
       - name: Set up Helm
-        uses: deliverybot/helm-action@v1
+        uses: deliverybot/helm-action@v2
 
       # Run helm lint
       - name: Run helm lint
