@@ -1,17 +1,35 @@
-name: Test Action Trigger
+name: Helm Lint Check
 
 on:
+  pull_request:
+    branches:
+      - main    # Or the branch you want to monitor
   push:
     branches:
-      - main
+      - main    # Or the branch you want to monitor
 
 jobs:
-  test-job:
+  helm-lint:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout Code
+      # Checkout the code
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Test Step
-        run: echo "Hello, world!"
+      # Set up Helm
+      - name: Set up Helm
+        uses: deliverybot/helm-action@v1
+
+      # Run helm lint
+      - name: Run helm lint
+        run: |
+          helm lint ./testing_chart
+        
+      # Fail the job if there are linting errors
+      - name: Fail if lint errors found
+        run: |
+          if [ $? -ne 0 ]; then
+            echo "Helm linting failed, please fix issues before merging.";
+            exit 1;
+          fi
